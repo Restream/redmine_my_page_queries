@@ -12,7 +12,7 @@ unless @sidebar_queries
       @sidebar_queries = Query.find(:all,
                                     :select => 'id, name, project_id',
                                     :order => "project_id DESC, name ASC",
-                                    :conditions => visible.conditions)
+                                    :conditions => visible.conditions) rescue []
     end
 if @user.pref[:others][:custom_query1] == nil then
   @user.pref[:others][:custom_query1]=Hash.new
@@ -27,13 +27,13 @@ if params[:custom_query1]=="true" then
   @user.pref.save
 end
 begin
-@query = Query.find(@user.pref[:others][:custom_query1][:id].to_i)
+  @query = Query.find(@user.pref[:others][:custom_query1][:id].to_i)
 rescue ActiveRecord::RecordNotFound
-    @user.pref[:others][:custom_query1][:id]=5
-    @user.pref.save
-    @query = Query.find(@user.pref[:others][:custom_query1][:id].to_i)
+  @user.pref[:others][:custom_query1][:id]=5
+  @user.pref.save
+  @query = Query.find(@user.pref[:others][:custom_query1][:id].to_i) rescue nil
 end
-custom_issues = @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
+custom_issues = @query.nil? ? [] : @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
                               :limit => @user.pref[:others][:custom_query1][:limit] )
 %>
 <span style="display:inline-block"><h3><% if(@query.project_id!=nil) -%><%= Project.visible.find(@query.project_id.to_i).name + " > " %><% end -%><%=h(@query.name)%> (<%= @query.issue_count%>)</h3>

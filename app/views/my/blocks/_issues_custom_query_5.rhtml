@@ -1,19 +1,19 @@
 <%
 unless @sidebar_queries
-      # User can see public queries and his own queries
-      visible = ARCondition.new(["is_public = ? OR user_id = ?", true, (@user.logged? ? @user.id : 0)])
-      # Project specific queries and global queries
-      projects=Project.visible.find(:all)
-      project_ids=Array.new
-      projects.each do |project|
-        project_ids+=[project[:id].to_i]
-      end
-      visible << ["project_id IS NULL OR project_id IN ( " + project_ids.join(', ') + ")"]
-      @sidebar_queries = Query.find(:all,
+  # User can see public queries and his own queries
+  visible = ARCondition.new(["is_public = ? OR user_id = ?", true, (@user.logged? ? @user.id : 0)])
+  # Project specific queries and global queries
+  projects=Project.visible.find(:all)
+  project_ids=Array.new
+  projects.each do |project|
+    project_ids+=[project[:id].to_i]
+  end
+  visible << ["project_id IS NULL OR project_id IN ( " + project_ids.join(', ') + ")"]
+  @sidebar_queries = Query.find(:all,
                                     :select => 'id, name, project_id',
                                     :order => "project_id DESC, name ASC",
-                                    :conditions => visible.conditions)
-    end
+                                    :conditions => visible.conditions) rescue []
+end
 if @user.pref[:others][:custom_query5] == nil then
   @user.pref[:others][:custom_query5]=Hash.new
   @user.pref.save
@@ -27,13 +27,13 @@ if params[:custom_query5]=="true" then
   @user.pref.save
 end
 begin
-@query = Query.find(@user.pref[:others][:custom_query5][:id].to_i)
+  @query = Query.find(@user.pref[:others][:custom_query5][:id].to_i)
 rescue ActiveRecord::RecordNotFound
     @user.pref[:others][:custom_query5][:id]=5
     @user.pref.save
-    @query = Query.find(@user.pref[:others][:custom_query5][:id].to_i)
+    @query = Query.find(@user.pref[:others][:custom_query5][:id].to_i) rescue nil
 end
-custom_issues = @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
+custom_issues = @query.nil? ? [] : @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
                               :limit => @user.pref[:others][:custom_query5][:limit] )
 %>
 <span style="display:inline-block"><h3><% if(@query.project_id!=nil) -%><%= Project.visible.find(@query.project_id.to_i).name + " > " %><% end -%><%=h(@query.name)%> (<%= @query.issue_count%>)</h3>
