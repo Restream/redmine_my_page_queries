@@ -36,7 +36,7 @@ end
 custom_issues = @query.nil? ? [] : @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
                               :limit => @user.pref[:others][:custom_query2][:limit] )
 %>
-<span style="display:inline-block"><h3><% if(@query.project_id!=nil) -%><%= Project.visible.find(@query.project_id.to_i).name + " > " %><% end -%><%=h(@query.name)%> (<%= @query.issue_count%>)</h3>
+<span style="display:inline-block"><h3><% if(@query && @query.project_id!=nil) -%><%= Project.visible.find(@query.project_id.to_i).name + " > " %><% end -%><%=h(@query ? @query.name : '')%> (<%= @query ? @query.issue_count : 0 %>)</h3>
 </span><span style="display:inline-block"><a href="#" onclick="var ele = document.getElementById('custom_query_form2'); if(ele.style.display=='none') { ele.style.display='' } else { ele.style.display='none' }">modify</a></span>
 <div style="display:none" id="custom_query_form2">
 <% form_tag({:action => ""}, :id => "block-form") do %>
@@ -68,11 +68,13 @@ custom_issues = @query.nil? ? [] : @query.issues(:include => [:assigned_to, :tra
 
 <%= render :partial => 'issues/list_simple', :locals => { :issues => custom_issues } %>
 <% if custom_issues.length > 0 
-if @query.project == nil then
+if @query
+if @query.project.nil? then
 %>
 <p class="small"<%= link_to(h(@query.name), :controller => 'issues',:action => 'index', :query_id => @query.id) %></p>
 <% else %>
 <p class="small"<%= link_to(h(@query.name), :controller => 'issues',:project_id =>@query.project.id ,:action => 'index', :query_id => @query.id) %></p>
+<% end %>
 <% end %>
 <% end %>
 
