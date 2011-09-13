@@ -1,13 +1,13 @@
 require 'redmine'
 
-class Integer
+Fixnum.class_eval do
   def to_custom_query_limit
     return 1  if self <= 0
     self
   end
 end
 
-class String
+String.class_eval do
   def to_custom_query_limit
     to_i.to_custom_query_limit
   end
