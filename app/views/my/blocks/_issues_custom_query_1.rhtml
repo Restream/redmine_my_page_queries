@@ -23,7 +23,7 @@ if @user.pref[:others][:custom_query1] == nil then
 end
 if params[:custom_query1]=="true" then
   @user.pref[:others][:custom_query1][:id]=params[:query].to_i
-  @user.pref[:others][:custom_query1][:limit]=params[:limit].to_i
+  @user.pref[:others][:custom_query1][:limit]=params[:limit].to_custom_query_limit
   @user.pref.save
 end
 begin
