@@ -1,10 +1,15 @@
 require 'redmine'
 
+class Integer
+  def to_custom_query_limit
+    return 1  if self <= 0
+    self
+  end
+end
+
 class String
   def to_custom_query_limit
-    r = to_i
-    return 1  if r <= 0
-    r
+    to_i.to_custom_query_limit
   end
 end
 

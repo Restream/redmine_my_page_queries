@@ -34,7 +34,7 @@ rescue ActiveRecord::RecordNotFound
   @query = Query.find(@user.pref[:others][:custom_query4][:id].to_i) rescue nil
 end
 custom_issues = @query.nil? ? [] : @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
-                              :limit => @user.pref[:others][:custom_query4][:limit] )
+                              :limit => @user.pref[:others][:custom_query4][:limit].to_custom_query_limit )
 %>
 <span style="display:inline-block"><h3><% if(@query && @query.project_id!=nil) -%><%= Project.visible.find(@query.project_id.to_i).name + " > " %><% end -%><%=h(@query ? @query.name : '')%> (<%= @query ? @query.issue_count : 0 %>)</h3>
 </span><span style="display:inline-block"><a href="#" onclick="var ele = document.getElementById('custom_query_form4'); if(ele.style.display=='none') { ele.style.display='' } else { ele.style.display='none' }">modify</a></span>
