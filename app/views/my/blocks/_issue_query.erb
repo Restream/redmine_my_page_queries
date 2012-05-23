@@ -1,0 +1,101 @@
+<%
+unless @sidebar_queries
+  # User can see public queries and his own queries
+  visible = ARCondition.new(["is_public = ? OR user_id = ?", true, (@user.logged? ? @user.id : 0)])
+  # Project specific queries and global queries
+  projects=Project.visible.find(:all)
+  project_ids=Array.new
+  projects.each do |project|
+    project_ids+=[project[:id].to_i]
+  end
+  visible << ["project_id IS NULL OR project_id IN ( " + project_ids.join(', ') + ")"]
+  @sidebar_queries = Query.find(:all,
+                                    :select => 'id, name, project_id',
+                                    :order => "project_id DESC, name ASC",
+                                    :conditions => visible.conditions) rescue []
+end
+if @user.pref[:others][issue_query] == nil then
+  @user.pref[:others][issue_query]=Hash.new
+  @user.pref.save
+  @user.pref[:others][issue_query][:id]=5
+  @user.pref[:others][issue_query][:limit]=10
+  @user.pref.save
+end
+if params[issue_query]=="true" then
+  @user.pref[:others][issue_query][:id]=params[:query].to_i
+  @user.pref[:others][issue_query][:limit]=params[:limit].to_custom_query_limit
+  @user.pref.save
+end
+begin
+  @query = Query.find(@user.pref[:others][issue_query][:id].to_i)
+rescue ActiveRecord::RecordNotFound
+    @user.pref[:others][issue_query][:id]=5
+    @user.pref.save
+    @query = Query.find(@user.pref[:others][issue_query][:id].to_i) rescue nil
+end
+custom_issues = @query.nil? ? [] : @query.issues(:include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
+                              :limit => @user.pref[:others][issue_query][:limit].to_custom_query_limit )
+%>
+<span style="display:inline-block"><h3><% if (@query && !@query.project_id.nil?) -%><%= Project.visible.find(@query.project_id.to_i).name + " > " %><% end -%><%=h(@query ? @query.name : '')%> (<%= @query ? @query.issue_count : 0 %>)</h3>
+</span><span style="display:inline-block"><a href="#" onclick="var ele = document.getElementById('<%= issue_query %>_form'); if(ele.style.display=='none') { ele.style.display='' } else { ele.style.display='none' }"><%= t(:issue_query_modify) %></a></span>
+<div style="display:none" id="<%= issue_query %>_form">
+<% form_tag(nil, :id => "block-form", :method => :get) do %>
+<table>
+  <tr>
+    <td>
+       <label for="query"><%= t(:issue_query) %>: </label>
+    </td>
+    <td>
+       <select name="query">
+        <% @sidebar_queries.each do |query| -%>
+         <option value="<%= h(query.id) %>" <% if @user.pref[:others][issue_query][:id].to_i==query.id -%>selected="selected"<% end -%>><% if(query.project_id.to_i>0) -%><%= Project.visible.find(query.project_id.to_i).name + " > " %><% end -%><%= h(query.name) %></option>
+        <% end -%>
+       </select>
+    </td>
+    <td>
+       <label for="limit"><%= t(:issue_query_limit) %>: </label>
+    </td>
+    <td>
+      <input type="text" size="4" maxlength="3" name="limit" value="<%= h(@user.pref[:others][issue_query][:limit]) %>" />
+    </td>
+    <td colspan="3">
+       <input type="hidden" name="<%= issue_query %>" value="true" /><input type="submit" value="<%= l(:button_save) %>" />
+    </td>
+   </tr>
+</table>
+<% end %>
+</div>
+
+<%= render(:partial => 'issues/list_simple',
+  :locals => { 
+    :issues => custom_issues
+  }) %>
+<% if custom_issues.length > 0 
+if @query
+  if @query.project.nil? then
+%>
+<p class="small"><%= link_to(h(@query.name), :controller => 'issues',:action => 'index', :query_id => @query.id) %></p>
+<% else %>
+<p class="small"><%= link_to(h(@query.name), :controller => 'issues',:project_id =>@query.project.id ,:action => 'index', :query_id => @query.id) %></p>
+<% end %>
+<% end %>
+<% end %>
+
+<% if @query %>
+  <% content_for :header_tags do %>
+    <%
+      opts = {
+        :controller => 'issues',
+        :action => 'index',
+        :set_filter => 1,
+        :query_id => @query.id,
+        :format => 'atom',
+        :key => User.current.rss_key
+      }
+
+      d_opts = {:title => l(:label_assigned_to_me_issues)}
+    %>
+
+    <%= auto_discovery_link_tag(:atom, opts, d_opts) %>
+  <% end %>
+<% end %>
