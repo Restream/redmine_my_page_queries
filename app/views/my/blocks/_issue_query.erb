@@ -39,7 +39,8 @@ custom_issues = @query.nil? ? [] : @query.issues(:include => [:assigned_to, :tra
 <span style="display:inline-block"><h3><% if (@query && !@query.project_id.nil?) -%><%= Project.visible.find(@query.project_id.to_i).name + " > " %><% end -%><%=h(@query ? @query.name : '')%> (<%= @query ? @query.issue_count : 0 %>)</h3>
 </span><span style="display:inline-block"><a href="#" onclick="var ele = document.getElementById('<%= issue_query %>_form'); if(ele.style.display=='none') { ele.style.display='' } else { ele.style.display='none' }"><%= t(:issue_query_modify) %></a></span>
 <div style="display:none" id="<%= issue_query %>_form">
-<% form_tag(nil, :id => "block-form", :method => :get) do %>
+
+<% form_tag("/my", :id => "block-form", :method => :get ) do %>
 <table>
   <tr>
     <td>
