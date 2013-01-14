@@ -40,7 +40,7 @@ custom_issues = @query.nil? ? [] : @query.issues(:include => [:assigned_to, :tra
 </span><span style="display:inline-block"><a href="#" onclick="var ele = document.getElementById('<%= issue_query %>_form'); if(ele.style.display=='none') { ele.style.display='' } else { ele.style.display='none' }"><%= t(:issue_query_modify) %></a></span>
 <div style="display:none" id="<%= issue_query %>_form">
 
-<% form_tag("/my", :id => "block-form", :method => :get ) do %>
+<%= form_tag("/my", :id => "block-form", :method => :get ) do %>
 <table>
   <tr>
     <td>
@@ -68,10 +68,10 @@ custom_issues = @query.nil? ? [] : @query.issues(:include => [:assigned_to, :tra
 </div>
 
 <%= render(:partial => 'issues/list_simple',
-  :locals => { 
+  :locals => {
     :issues => custom_issues
   }) %>
-<% if custom_issues.length > 0 
+<% if custom_issues.length > 0
 if @query
   if @query.project.nil? then
 %>
