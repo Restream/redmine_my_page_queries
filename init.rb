@@ -13,11 +13,16 @@ String.class_eval do
   end
 end
 
+Rails.application.paths["app/overrides"] ||= []
+Rails.application.paths["app/overrides"] << File.expand_path("../app/overrides", __FILE__)
+
+require 'my_page_queries/patches/my_controller_patch'
+
 Redmine::Plugin.register :redmine_my_page_queries do
   name 'MyPage custom queries'
-  author 'Milan Stastny of ALVILA SYSTEMS'
   description 'Adds custom queries onto My Page screen'
-  version '0.0.2'
-  author_url 'http://www.alvila.com'
+  version '0.0.3'
+  author 'Undev'
+  author_url 'https://github.com/Undev'
+  url 'https://github.com/Undev/redmine_my_page_queries'
 end
-

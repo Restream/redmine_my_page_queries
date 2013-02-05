@@ -1,6 +1,7 @@
 # Redmine My Page Queries
 
-Adds custom queries onto My Page screen
+Adds custom queries onto My Page screen.
+Also plugin adds "restore default" button on my page personalization.
 
 ## Installing a plugin
 
