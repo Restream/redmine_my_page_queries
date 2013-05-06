@@ -16,7 +16,9 @@ end
 Rails.application.paths["app/overrides"] ||= []
 Rails.application.paths["app/overrides"] << File.expand_path("../app/overrides", __FILE__)
 
-require 'my_page_queries/patches/my_controller_patch'
+ActionDispatch::Callbacks.to_prepare do
+  require 'my_page_queries/patches/my_controller_patch'
+end
 
 Redmine::Plugin.register :redmine_my_page_queries do
   name 'MyPage custom queries'
