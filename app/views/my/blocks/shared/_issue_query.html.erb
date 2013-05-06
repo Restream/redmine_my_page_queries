@@ -67,10 +67,13 @@ custom_issues = @query.nil? ? [] : @query.issues(:include => [:assigned_to, :tra
 <% end %>
 </div>
 
-<%= render(:partial => 'issues/list_simple',
-  :locals => {
-    :issues => custom_issues
-  }) %>
+<% if @query %>
+  <%= render(:partial => 'my/blocks/shared/issues_list',
+    :locals => {
+      :issues => custom_issues,
+      :query => @query
+    }) %>
+<% end %>
 <% if custom_issues.length > 0
 if @query
   if @query.project.nil? then

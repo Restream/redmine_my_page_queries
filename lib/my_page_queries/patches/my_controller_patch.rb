@@ -6,6 +6,12 @@ module MyPageQueries::Patches::MyControllerPatch
     before_filter :apply_default_layout, :only => [:add_block, :remove_block],
                   :if => proc { User.current.pref[:my_page_layout].nil? }
 
+    before_filter :my_page_sort_init
+
+    helper :sort
+    include SortHelper
+    helper :queries
+    include QueriesHelper
   end
 
   ##
@@ -26,6 +32,11 @@ module MyPageQueries::Patches::MyControllerPatch
     # make a deep copy of default layout
     user.pref[:my_page_layout] = Marshal.load(Marshal.dump(MyController::DEFAULT_LAYOUT))
     user.save
+  end
+
+  def my_page_sort_init
+    sort_init('none')
+    sort_update(['none'])
   end
 end
 
