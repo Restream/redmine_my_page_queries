@@ -1,3 +1,7 @@
+<% issues = query.issues(
+    :include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
+    :limit => per_page_option) %>
+<h3><%= query_link(query) %></h3>
 <%= form_tag({}) do -%>
   <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
   <div class="autoscroll">
@@ -11,19 +15,19 @@
         </th>
         <th>#</th>
         <% query.inline_columns.each do |column| %>
-          <th><%= h(column.caption) %></th>
+          <th><%= column.caption %></th>
         <% end %>
       </tr>
       </thead>
       <% previous_group = false %>
       <tbody>
       <% issue_list(issues) do |issue, level| -%>
-        <% if @query.grouped? && (group = @query.group_by_column.value(issue)) != previous_group %>
+        <% if query.grouped? && (group = query.group_by_column.value(issue)) != previous_group %>
           <% reset_cycle %>
           <tr class="group open">
             <td colspan="<%= query.inline_columns.size + 2 %>">
               <span class="expander" onclick="toggleRowGroup(this);">&nbsp;</span>
-              <%= group.blank? ? l(:label_none) : column_content(@query.group_by_column, issue) %> <span class="count"><%= query.issue_count_by_group[group] %></span>
+              <%= group.blank? ? l(:label_none) : column_content(query.group_by_column, issue) %> <span class="count"><%= query.issue_count_by_group[group] %></span>
               <%= link_to_function("#{l(:button_collapse_all)}/#{l(:button_expand_all)}",
                                    "toggleAllRowGroups(this)", :class => 'toggle-all') %>
             </td>
@@ -35,10 +39,10 @@
           <td class="id"><%= link_to issue.id, issue_path(issue) %></td>
           <%= raw query.inline_columns.map {|column| "<td class=\"#{column.css_classes}\">#{column_content(column, issue)}</td>"}.join %>
         </tr>
-        <% @query.block_columns.each do |column|
+        <% query.block_columns.each do |column|
           if (text = column_content(column, issue)) && text.present? -%>
             <tr class="<%= current_cycle %>">
-              <td colspan="<%= @query.inline_columns.size + 2 %>" class="<%= column.css_classes %>"><%= text %></td>
+              <td colspan="<%= query.inline_columns.size + 2 %>" class="<%= column.css_classes %>"><%= text %></td>
             </tr>
           <% end -%>
         <% end -%>
