@@ -14,11 +14,11 @@ module MyPageQueries::Patches::UserPatch
   end
 
   def my_visible_queries
-    Query.visible(self).where('queries.user_id = ?', self.id)
+    Query.visible(self).where('queries.user_id = ?', self.id).order('queries.name')
   end
 
   def other_visible_queries
-    Query.visible(self).where('queries.user_id <> ?', self.id)
+    Query.visible(self).where('queries.user_id <> ?', self.id).order('queries.name')
   end
 end
 

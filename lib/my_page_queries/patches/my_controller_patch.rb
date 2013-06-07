@@ -33,7 +33,7 @@ module MyPageQueries::Patches::MyControllerPatch
   def page_layout_with_queries
     page_layout_without_queries
     @user.visible_queries.each do |q|
-      q_name = q.project ? "(#{q.project}) #{q.name}" : q.name
+      q_name = q.project ? "#{q.name} (#{q.project})" : q.name
       @block_options << [q_name, "query_#{q.id}"]
     end
   end
