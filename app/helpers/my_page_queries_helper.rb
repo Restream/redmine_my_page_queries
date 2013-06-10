@@ -21,7 +21,7 @@ module MyPageQueriesHelper
   end
 
   def query_title(query)
-    "#{query.name} (#{query.issues.count})"
+    "#{query.name} (#{query.issue_count})"
   end
 
   def query_link(query)
