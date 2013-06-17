@@ -14,11 +14,16 @@ module MyPageQueries::Patches::UserPatch
   end
 
   def my_visible_queries
-    Query.visible(self).where('queries.user_id = ?', self.id).order('queries.name')
+    visible_queries_scope.where('queries.user_id = ?', self.id).order('queries.name')
   end
 
   def other_visible_queries
-    Query.visible(self).where('queries.user_id <> ?', self.id).order('queries.name')
+    visible_queries_scope.where('queries.user_id <> ?', self.id).order('queries.name')
+  end
+
+  def visible_queries_scope
+    kl = defined?(IssueQuery) ? IssueQuery : Query
+    kl.visible(self)
   end
 end
 
