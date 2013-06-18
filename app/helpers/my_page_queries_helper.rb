@@ -24,11 +24,11 @@ module MyPageQueriesHelper
     "#{query.name} (#{query.issue_count})"
   end
 
-  def query_link(query)
+  def query_link(title, query)
     url_opts = { :controller => 'issues',
                  :action => 'index',
                  :query_id => query.id }
     url_opts[:project_id] = query.project.id unless query.project.nil?
-    link_to query_title(query), url_opts
+    link_to title, url_opts
   end
 end

@@ -1,7 +1,7 @@
 <% issues = query.issues(
     :include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
     :limit => per_page_option) %>
-<h3><%= query_link(query) %></h3>
+<h3><%= query_title(query) %></h3>
 <%= form_tag({}) do -%>
   <%= hidden_field_tag 'back_url', url_for(params), :id => nil %>
   <div class="autoscroll">
@@ -51,3 +51,7 @@
     </table>
   </div>
 <% end -%>
+<% if query.issue_count > 0 %>
+  <p class="small"><%= query_link l(:label_issue_view_all), query %></p>
+<% end %>
+
