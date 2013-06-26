@@ -11,7 +11,7 @@
 <% end %>
 <%= link_to l(:button_back), {:action => 'page'}, :class => 'icon icon-cancel' %>
   <%= form_tag({:action => 'default_layout'}, :id => 'default-layout-form') do %>
-    <%= link_to l(:button_default_layout), '#', :onclick => '$(\"#default-layout-form\").submit()', :class => 'icon icon-reload' %>
+    <%= link_to l(:button_default_layout), '#', :onclick => '$("#default-layout-form").submit()', :class => 'icon icon-reload' %>
   <% end %>
 </div>
 
