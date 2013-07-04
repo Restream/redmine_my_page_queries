@@ -52,7 +52,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
 
   def test_add_block_to_default
     @user.pref[:my_page_layout] = nil
-    post :add_block, :block => 'issues_custom_query_1'
+    post :add_block, :block => 'query_4'
     assert_redirected_to '/my/page_layout'
     @user = User.current
     MyController::DEFAULT_LAYOUT.each do |position, block|
