@@ -14,22 +14,13 @@ module MyPageQueriesHelper
 
   def render_block(user, block)
     if (query = query_from_block(user, block))
+      query_presenter = QueryPresenter.new(query)
       redm_version = Redmine::VERSION::MINOR < 2 ? '_2_1_0' : ''
-      render "my/query_block#{redm_version}", :user => user, :query => query
+      render "my/query_block#{redm_version}",
+             :user => user,
+             :query => query_presenter
     else
       render "my/blocks/#{block}", :user => user
     end
-  end
-
-  def query_title(query)
-    "#{query.name} (#{query.issue_count})"
-  end
-
-  def query_link(title, query)
-    url_opts = { :controller => 'issues',
-                 :action => 'index',
-                 :query_id => query.id }
-    url_opts[:project_id] = query.project.id unless query.project.nil?
-    link_to title, url_opts
   end
 end
