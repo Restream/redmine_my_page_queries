@@ -1,7 +1,8 @@
 class QueryPresenter < SimpleDelegator
 
-  def initialize(obj)
-    super
+  def initialize(obj, view_context)
+    super(obj)
+    @view_context = view_context
   end
 
   def title
@@ -13,7 +14,7 @@ class QueryPresenter < SimpleDelegator
                  :action => 'index',
                  :query_id => id }
     url_opts[:project_id] = project.id unless project.nil?
-    link_to title, url_opts
+    @view_context.link_to title, url_opts
   end
 
   def issues

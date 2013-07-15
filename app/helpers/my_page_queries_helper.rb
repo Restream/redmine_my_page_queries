@@ -14,7 +14,7 @@ module MyPageQueriesHelper
 
   def render_block(user, block)
     if (query = query_from_block(user, block))
-      query_presenter = QueryPresenter.new(query)
+      query_presenter = QueryPresenter.new(query, self)
       redm_version = Redmine::VERSION::MINOR < 2 ? '_2_1_0' : ''
       render "my/query_block#{redm_version}",
              :user => user,

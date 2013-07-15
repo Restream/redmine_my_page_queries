@@ -7,7 +7,7 @@ class MyController; def rescue_action(e) raise e end; end
 class MyPageQueries::MyControllerTest < ActionController::TestCase
   fixtures :users, :user_preferences, :roles, :projects, :members, :member_roles,
   :issues, :issue_statuses, :trackers, :enumerations, :custom_fields, :auth_sources,
-  :queries
+  :queries, :trackers, :enabled_modules
 
   def setup
     @controller = MyController.new
@@ -23,8 +23,8 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
   end
 
   def test_page_layout
-    query = Query.find(4)
-    @user.pref[:my_page_layout] = { 'top' => ['query_4'] }
+    query = Query.find(5)
+    @user.pref[:my_page_layout] = { 'top' => ['query_5'] }
     @user.pref.save!
     get :page_layout
     assert_response :success
@@ -32,18 +32,18 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
   end
 
   def test_add_block
-    query = Query.find(4)
-    post :add_block, :block => 'query_4'
+    query = Query.find(5)
+    post :add_block, :block => 'query_5'
     assert_redirected_to '/my/page_layout'
     assert @user.pref[:my_page_layout]
     top_blocks = @user.pref[:my_page_layout]['top']
     assert top_blocks
-    assert top_blocks.include?('query_4')
+    assert top_blocks.include?('query_5')
   end
 
   def test_show_query_block
-    query = Query.find(4)
-    @user.pref[:my_page_layout] = { 'top' => ['query_4'] }
+    query = Query.find(5)
+    @user.pref[:my_page_layout] = { 'top' => ['query_5'] }
     @user.pref.save!
     get :page
     assert_response :success
@@ -52,7 +52,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
 
   def test_add_block_to_default
     @user.pref[:my_page_layout] = nil
-    post :add_block, :block => 'query_4'
+    post :add_block, :block => 'query_5'
     assert_redirected_to '/my/page_layout'
     @user = User.current
     MyController::DEFAULT_LAYOUT.each do |position, block|
@@ -61,15 +61,18 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
   end
 
   def test_remove_block
-    post :remove_block, :block => 'issues_custom_query_1'
+    @user.pref[:my_page_layout] = { 'top' => ['query_5'] }
+    @user.pref.save!
+    post :remove_block, :block => 'query_5'
     assert_redirected_to '/my/page_layout'
-    assert !@user.pref[:my_page_layout].values.flatten.include?('issues_custom_query_1')
+    @user.pref.reload
+    assert_false @user.pref[:my_page_layout].values.flatten.include?('query_5')
   end
 
   def test_order_blocks
-    xhr :post, :order_blocks, :group => 'left', 'blocks' => ['issues_custom_query_1', 'calendar', 'latestnews']
+    xhr :post, :order_blocks, :group => 'left', 'blocks' => ['query_5', 'calendar', 'latestnews']
     assert_response :success
-    assert_equal ['issues_custom_query_1', 'calendar', 'latestnews'], @user.pref[:my_page_layout]['left']
+    assert_equal ['query_5', 'calendar', 'latestnews'], @user.pref[:my_page_layout]['left']
   end
 
   def test_layout_contains_users_queries
