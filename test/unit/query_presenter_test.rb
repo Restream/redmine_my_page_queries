@@ -45,6 +45,6 @@ class QueryPresenterTest < ActionView::TestCase
 
   def test_available_limits
     limits = [1, 3, 5, 10, 25, 50, 100]
-    assert_equal limits, @query_presenter.available_limits
+    assert_equal limits, @query_presenter.send(:available_limits)
   end
 end
