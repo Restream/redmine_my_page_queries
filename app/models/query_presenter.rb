@@ -1,5 +1,7 @@
 class QueryPresenter < SimpleDelegator
 
+  DEFAULT_LIMIT = 10
+
   def initialize(obj, view_context)
     super(obj)
     @view_context = view_context
@@ -17,14 +19,31 @@ class QueryPresenter < SimpleDelegator
     @view_context.link_to title, url_opts
   end
 
-  def issues
-    super(
-        :include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
-        :limit => per_page_option)
+  def issues(options = {})
+    options.merge!(
+      :include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
+      :limit => limit
+    )
+    super(options)
   end
 
-  def per_page_option
+  def limit
+    optn = pref_options[:limit]
+    optn && optn.to_i || DEFAULT_LIMIT
+  end
 
+  def available_limits
+    (Setting.per_page_options_array + [1,3,5,10]).sort.uniq
+  end
+
+  private
+
+  def pref_options
+    User.current.pref.others[pref_key] || {}
+  end
+
+  def pref_key
+    "query_#{id}".to_sym
   end
 
 end
