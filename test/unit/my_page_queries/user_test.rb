@@ -26,7 +26,7 @@ class MyPageQueries::UserTest < ActionView::TestCase
 
   def test_detect_query
     assert_equal 4, @user.detect_query(4).id
-    assert_equal 5, @user.detect_query(5).id
+    assert_equal 5, @user.detect_query('5').id
     assert_equal 6, @user.detect_query(6).id
     assert_equal 9, @user.detect_query(9).id
     assert_nil @user.detect_query(8)

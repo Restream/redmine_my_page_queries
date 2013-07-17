@@ -6,7 +6,7 @@ module MyPageQueries::Patches::UserPatch
   extend ActiveSupport::Concern
 
   def detect_query(query_id)
-    visible_queries.detect { |q| q.id == query_id }
+    visible_queries.detect { |q| q.id == query_id.to_i }
   end
 
   def visible_queries
