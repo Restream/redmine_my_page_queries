@@ -89,6 +89,7 @@ module MyPageQueries::Patches::MyControllerPatch
   end
 
   def update_user_query_pref_from_param(user)
+    return unless params[:query]
     query_key = "query_#{params[:query_id]}".to_sym
     opts = user.pref[query_key] || {}
     opts.merge! params[:query].symbolize_keys

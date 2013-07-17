@@ -4,7 +4,7 @@ class QueryPresenter < SimpleDelegator
 
   def initialize(obj, view_context)
     super(obj)
-    @view_context = view_context
+    @view = view_context
   end
 
   def title
@@ -16,7 +16,7 @@ class QueryPresenter < SimpleDelegator
                  :action => 'index',
                  :query_id => id }
     url_opts[:project_id] = project.id unless project.nil?
-    @view_context.link_to title, url_opts
+    @view.link_to title, url_opts
   end
 
   def issues(options = {})
@@ -34,6 +34,19 @@ class QueryPresenter < SimpleDelegator
 
   def available_limits
     (Setting.per_page_options_array + [1,3,5,10]).sort.uniq
+  end
+
+  def pagination_links
+    html = link @view.l(:label_issue_view_all)
+    html << ' | '
+    limits = available_limits.map do |q_limit|
+      @view.link_to q_limit,
+                    @view.update_query_block_path(id, :query => { :limit => q_limit }),
+                    :method => 'put',
+                    :remote => true
+    end.join(', ').html_safe
+    html << @view.l(:my_page_query_limit, :limits => limits).html_safe
+    html.html_safe
   end
 
   private

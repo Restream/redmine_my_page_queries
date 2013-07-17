@@ -1,4 +1,5 @@
 <%=	stylesheet_link_tag 'my_page_queries', :plugin => 'redmine_my_page_queries' %>
+<%= javascript_include_tag 'my_page_queries', :plugin => 'redmine_my_page_queries' %>
 <div class="contextual">
 <% if @block_options.present? %>
   <%= form_tag({:action => "add_block"}, :id => "block-form") do %>

@@ -1,2 +1,3 @@
 ru:
   button_default_layout: "По умолчанию"
+  my_page_query_limit: "Показывать %{limits} задач"
