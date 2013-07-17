@@ -31,8 +31,14 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
     assert_tag :h3, :content => /#{query.name}/
   end
 
+  def test_page_layout_with_missing_query
+    @user.pref[:my_page_layout] = { 'top' => ['query_66'] }
+    @user.pref.save!
+    get :page_layout
+    assert_response :success
+  end
+
   def test_add_block
-    query = Query.find(5)
     post :add_block, :block => 'query_5'
     assert_redirected_to '/my/page_layout'
     assert @user.pref[:my_page_layout]
@@ -88,4 +94,15 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
     assert_tag :option, :attributes => { :value => 'query_6'}
     assert_tag :option, :attributes => { :value => 'query_9'}
   end
+
+  def test_update_query_limit
+    @user.pref[:my_page_layout] = { 'top' => ['query_5'] }
+    @user.pref[:query_5] = { :limit => 20 }
+    @user.pref.save!
+    xhr :put, :update_query_block, :query_id => 5, :query => { :limit => 3 }
+    assert_response :success
+    @user.pref.reload
+    assert_equal 3, @user.pref[:query_5][:limit].to_i
+  end
+
 end

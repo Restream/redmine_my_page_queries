@@ -47,6 +47,18 @@ module MyPageQueries::Patches::MyControllerPatch
     end
   end
 
+  def update_query_block
+    @user = User.current
+    query = @user.detect_query params[:query_id]
+    if query
+      @block_name = "query_#{query.id}"
+      update_user_query_pref_from_param(@user)
+      render 'query_block', :layout => false
+    else
+      render_404
+    end
+  end
+
   private
 
   def apply_default_layout
@@ -74,6 +86,14 @@ module MyPageQueries::Patches::MyControllerPatch
   def detect_query_block_from_params
     block = params[:block].to_s.underscore
     block if extract_query_id_from_block(block)
+  end
+
+  def update_user_query_pref_from_param(user)
+    query_key = "query_#{params[:query_id]}".to_sym
+    opts = user.pref[query_key] || {}
+    opts.merge! params[:query].symbolize_keys
+    user.pref[query_key] = opts
+    user.pref.save!
   end
 end
 
