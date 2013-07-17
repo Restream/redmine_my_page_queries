@@ -11,17 +11,17 @@ class MyPageQueries::UserTest < ActionView::TestCase
 
   def test_my_visible_queries
     query_ids = @user.my_visible_queries.map(&:id).sort
-    assert_equal [4], query_ids
+    assert_equal [4, 7, 8], query_ids
   end
 
   def test_other_visible_queries
     query_ids = @user.other_visible_queries.map(&:id).sort
-    assert_equal [5, 6, 9], query_ids
+    assert_equal [1, 5, 6, 9], query_ids
   end
 
   def test_visible_queries
     query_ids = @user.visible_queries.map(&:id).sort
-    assert_equal [4, 5, 6, 9], query_ids
+    assert_equal [1, 4, 5, 6, 7, 8, 9], query_ids
   end
 
   def test_detect_query
@@ -29,6 +29,6 @@ class MyPageQueries::UserTest < ActionView::TestCase
     assert_equal 5, @user.detect_query('5').id
     assert_equal 6, @user.detect_query(6).id
     assert_equal 9, @user.detect_query(9).id
-    assert_nil @user.detect_query(8)
+    assert_nil @user.detect_query(2) # private query user_id: 3
   end
 end
