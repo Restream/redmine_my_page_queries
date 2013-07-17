@@ -24,7 +24,8 @@ class QueryPresenter < SimpleDelegator
   def issues(options = {})
     options.merge!(
       :include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
-      :limit => limit
+      :limit => limit,
+      :order => default_sort_criteria.to_sql
     )
     super(options)
   end
@@ -46,7 +47,19 @@ class QueryPresenter < SimpleDelegator
     pref_options[:compact_view].nil? || pref_options[:compact_view] == 'true'
   end
 
+  def sort_criteria
+    __getobj__.sort_criteria
+  end
+
   private
+
+  def default_sort_criteria
+    query_criteria = sort_criteria.empty? ? [['id', 'desc']] : sort_criteria
+    criteria = SortCriteria.new
+    criteria.available_criteria = sortable_columns
+    criteria.criteria = query_criteria
+    criteria
+  end
 
   def available_limits
     (Setting.per_page_options_array + [1,3,5,10]).sort.uniq
