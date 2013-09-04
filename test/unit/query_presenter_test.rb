@@ -3,7 +3,7 @@ require File.expand_path('../../test_helper', __FILE__)
 class QueryPresenterTest < ActionView::TestCase
   fixtures :users, :user_preferences, :roles, :projects, :members, :member_roles,
            :issues, :issue_statuses, :trackers, :enumerations, :custom_fields,
-           :auth_sources, :queries
+           :auth_sources, :queries, :enabled_modules
 
   include ActionView::TestCase::Behavior
 
