@@ -72,7 +72,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
     post :remove_block, :block => 'query_5'
     assert_redirected_to '/my/page_layout'
     @user.pref.reload
-    assert_false @user.pref[:my_page_layout].values.flatten.include?('query_5')
+    assert_equal false, @user.pref[:my_page_layout].values.flatten.include?('query_5')
   end
 
   def test_order_blocks
