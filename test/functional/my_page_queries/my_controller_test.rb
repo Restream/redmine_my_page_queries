@@ -31,6 +31,15 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
     assert_tag :h3, :content => /#{query.name}/
   end
 
+  def test_page_layout_with_already_added_query
+    query = Query.find(5)
+    @user.pref[:my_page_layout] = { 'top' => ['query_5'] }
+    @user.pref.save!
+    get :page_layout
+    assert_response :success
+    assert_no_tag :option, :content => /#{query.name}/
+  end
+
   def test_page_layout_with_missing_query
     @user.pref[:my_page_layout] = { 'top' => ['query_66'] }
     @user.pref.save!
