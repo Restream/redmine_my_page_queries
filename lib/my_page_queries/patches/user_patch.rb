@@ -1,5 +1,6 @@
-require 'principal'
-require 'user'
+require_dependency 'project'
+require_dependency 'principal'
+require_dependency 'user'
 
 module MyPageQueries::Patches::UserPatch
   extend ActiveSupport::Concern
