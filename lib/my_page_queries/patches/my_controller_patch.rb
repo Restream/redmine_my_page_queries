@@ -1,3 +1,6 @@
+require_dependency 'query'
+require_dependency 'issue_query' if Redmine::VERSION.to_s >= '2.3.0'
+
 module MyPageQueries::Patches::MyControllerPatch
   extend ActiveSupport::Concern
 
