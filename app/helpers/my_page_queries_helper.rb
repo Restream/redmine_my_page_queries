@@ -27,4 +27,10 @@ module MyPageQueriesHelper
     redm_version = Redmine::VERSION::MINOR < 2 ? '_2_1_0' : ''
     "my/query_block#{redm_version}"
   end
+
+  def link_to_query(query, html_options = {})
+    url_params = { :controller => 'issues', :action => 'index', :query_id => query.id }
+    url_params[:project_id] = query.project.identifier if query.project
+    link_to query.name, url_params, html_options
+  end
 end

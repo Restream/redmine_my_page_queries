@@ -3,8 +3,9 @@
 [![Build Status](https://travis-ci.org/Undev/redmine_my_page_queries.png)](https://travis-ci.org/Undev/redmine_my_page_queries)
 [![Code Climate](https://codeclimate.com/github/Undev/redmine_my_page_queries.png)](https://codeclimate.com/github/Undev/redmine_my_page_queries)
 
-Adds custom queries onto My Page screen.
-Also plugin adds "restore default" button on my page personalization.
+* Adds custom queries onto My Page screen.
+* Adds "restore default" button on my page personalization.
+* Adds "My custom queries" block
 
 ## Installing a plugin
 
