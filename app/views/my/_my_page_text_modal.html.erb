@@ -1,0 +1,29 @@
+<h3 class="title"><%= l(:label_string) %></h3>
+
+<%= form_tag(update_my_page_text_path,
+             :remote => true,
+             :method => :put,
+             :id => 'my-page-text-form') do %>
+
+  <div class="my-page-text">
+    <%= text_area_tag 'my_page_text_area',
+                      @user.my_page_text,
+                      :rows => 10,
+                      :accesskey => accesskey(:edit),
+                      :class => 'wiki-edit',
+                      :no_label => true %>
+    <%= wikitoolbar_for 'my_page_text_area' %>
+  </div>
+
+  <p class="buttons">
+    <%= submit_tag l(:button_save),
+                   :id => 'my-page-text-submit',
+                   :name => nil,
+                   :onclick => 'hideModal(this);' %>
+    <%= submit_tag l(:button_cancel),
+                   :id => 'my-page-text-cancel',
+                   :name => nil,
+                   :onclick => 'hideModal(this);',
+                   :type => 'button' %>
+  </p>
+<% end %>

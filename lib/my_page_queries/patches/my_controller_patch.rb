@@ -63,6 +63,12 @@ module MyPageQueries::Patches::MyControllerPatch
     end
   end
 
+  def update_text
+    @user = User.current
+    @user.my_page_text = params[:my_page_text_area]
+    render 'update_text', :layout => false, :content_type => 'text/javascript'
+  end
+
   private
 
   def apply_default_layout

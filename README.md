@@ -6,6 +6,7 @@
 * Adds custom queries onto My Page screen.
 * Adds "restore default" button on my page personalization.
 * Adds "My custom queries" block
+* Adds "Text" block
 
 ## Installing a plugin
 

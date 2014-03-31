@@ -31,4 +31,11 @@ class MyPageQueries::UserTest < ActionView::TestCase
     assert_equal 9, @user.detect_query(9).id
     assert_nil @user.detect_query(2) # private query user_id: 3
   end
+
+  def test_my_page_custom_text
+    test_string = 'test string'
+    @user.my_page_text = test_string
+    @user.reload
+    assert_equal test_string, @user.my_page_text
+  end
 end

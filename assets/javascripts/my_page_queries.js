@@ -5,4 +5,12 @@ $(document).ready(function() {
       $(container).html(data.responseText);
     }
   });
+
+  $('#content').on('click', '.edit-my-page-text', function(event) {
+    event.preventDefault();
+    $("#ajax-modal").html(window.myPageTextModal);
+    showModal("ajax-modal", "60%");
+    $('#my_page_text_area').focus();
+    $("#ajax-modal").addClass("my-page-text");
+  });
 });

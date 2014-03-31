@@ -25,6 +25,15 @@ module MyPageQueries::Patches::UserPatch
     kl = defined?(IssueQuery) ? IssueQuery : Query
     kl.visible(self)
   end
+
+  def my_page_text=(val)
+    pref[:my_page_text] = val
+    pref.save
+  end
+
+  def my_page_text
+    pref[:my_page_text]
+  end
 end
 
 unless User.included_modules.include?(MyPageQueries::Patches::UserPatch)
