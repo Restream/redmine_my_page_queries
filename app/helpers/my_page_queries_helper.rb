@@ -35,13 +35,11 @@ module MyPageQueriesHelper
   end
 
   def block_options_for_select(user = User.current)
-    options = {}
-    options.merge! my_queries(user)
-    options.merge! queries_from_my_projects(user)
-    options.merge! queries_from_public_projects(user)
     content_tag('option') +
         grouped_options_for_select(l(:label_my_page_block) => @block_options) +
-        grouped_options_for_select(options)
+        grouped_options_for_select(my_queries(user)) +
+        grouped_options_for_select(queries_from_my_projects(user)) +
+        grouped_options_for_select(queries_from_public_projects(user))
   end
 
   def my_queries(user)
