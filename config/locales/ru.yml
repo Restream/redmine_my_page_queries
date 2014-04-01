@@ -3,3 +3,5 @@ ru:
   my_page_query_limit: "Показывать %{limits} задач"
   my_page_query_compact: "Компактно"
   my_page_query_full: "Развернуто"
+  label_queries_from_my_projects: "Запросы из моих проектов"
+  label_queries_from_public_projects: "Запросы из публичных проектов"

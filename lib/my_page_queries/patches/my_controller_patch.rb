@@ -11,7 +11,6 @@ module MyPageQueries::Patches::MyControllerPatch
 
     before_filter :my_page_sort_init
 
-    alias_method_chain :page_layout, :queries
     alias_method_chain :add_block, :queries
 
     helper :sort
@@ -31,15 +30,6 @@ module MyPageQueries::Patches::MyControllerPatch
     @user.pref[:my_page_layout] = nil
     @user.pref.save
     redirect_to :action => 'page_layout'
-  end
-
-  def page_layout_with_queries
-    page_layout_without_queries
-    @user.visible_queries.each do |q|
-      next if @blocks.values.flatten.include? "query_#{q.id}"
-      q_name = q.project ? "#{q.name} (#{q.project})" : q.name
-      @block_options << [q_name, "query_#{q.id}"]
-    end
   end
 
   def add_block_with_queries

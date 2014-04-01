@@ -24,6 +24,16 @@ class MyPageQueries::UserTest < ActionView::TestCase
     assert_equal [1, 4, 5, 6, 7, 8, 9], query_ids
   end
 
+  def test_queries_from_my_projects
+    query_ids = @user.queries_from_my_projects.map(&:id).sort
+    assert_equal [1], query_ids
+  end
+
+  def test_queries_from_public_projects
+    query_ids = @user.queries_from_public_projects.map(&:id).sort
+    assert_equal [5, 6, 9], query_ids
+  end
+
   def test_detect_query
     assert_equal 4, @user.detect_query(4).id
     assert_equal 5, @user.detect_query('5').id

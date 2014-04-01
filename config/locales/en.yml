@@ -3,3 +3,5 @@ en:
   my_page_query_limit: "Show only %{limits} issues"
   my_page_query_compact: "Compact view"
   my_page_query_full: "Extended view"
+  label_queries_from_my_projects: "Queries from my projects"
+  label_queries_from_public_projects: "Queries from public projects"

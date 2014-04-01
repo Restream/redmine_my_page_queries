@@ -21,6 +21,14 @@ module MyPageQueries::Patches::UserPatch
     visible_queries_scope.where('queries.user_id <> ?', self.id).order('queries.name')
   end
 
+  def queries_from_my_projects
+    @queries_from_my_projects ||= other_visible_queries.find_all { |q| q.is_public && q.project && member_of?(q.project) }
+  end
+
+  def queries_from_public_projects
+    @queries_from_public_projects ||= other_visible_queries.to_a - queries_from_my_projects
+  end
+
   def visible_queries_scope
     kl = defined?(IssueQuery) ? IssueQuery : Query
     kl.visible(self)
