@@ -25,7 +25,7 @@ class QueryPresenter < SimpleDelegator
     options.merge!(
       :include => [:assigned_to, :tracker, :priority, :category, :fixed_version],
       :limit => limit,
-      :order => default_sort_criteria.to_sql
+      :order => sort_criteria.to_sql
     )
     super(options)
   end
@@ -48,17 +48,56 @@ class QueryPresenter < SimpleDelegator
   end
 
   def sort_criteria
-    __getobj__.sort_criteria
+    @sort_criteria ||= begin
+      sort_criteria_attr = __getobj__.sort_criteria
+      query_criteria = sort_criteria_attr.empty? ? [%w(id desc)] : sort_criteria_attr
+      criteria = SortCriteria.new
+      criteria.available_criteria = sortable_columns
+      criteria.from_param(pref_options[:sort])
+      criteria.criteria = query_criteria if criteria.empty?
+      criteria
+    end
+  end
+
+  def column_header(column)
+    column.sortable ?
+        sort_header_tag(column.name.to_s, :caption => column.caption,
+                        :default_order => column.default_order) :
+        @view.content_tag('th', column.caption)
   end
 
   private
 
-  def default_sort_criteria
-    query_criteria = sort_criteria.empty? ? [['id', 'desc']] : sort_criteria
-    criteria = SortCriteria.new
-    criteria.available_criteria = sortable_columns
-    criteria.criteria = query_criteria
-    criteria
+  def sort_header_tag(column, options = {})
+    caption = options.delete(:caption) || column.to_s.humanize
+    default_order = options.delete(:default_order) || 'asc'
+    options[:title] = l(:label_sort_by, "\"#{caption}\"") unless options[:title]
+    @view.content_tag('th', sort_link(column, caption, default_order), options)
+  end
+
+  def sort_link(column, caption, default_order)
+    css, order = nil, default_order
+
+    if column.to_s == sort_criteria.first_key
+      if sort_criteria.first_asc?
+        css = 'sort asc'
+        order = 'desc'
+      else
+        css = 'sort desc'
+        order = 'asc'
+      end
+    end
+    caption = column.to_s.humanize unless caption
+
+    sort_options = { :sort => sort_criteria.add(column.to_s, order).to_param }
+
+    url_options = @view.update_query_block_path(self[:id], :query => sort_options)
+
+    @view.link_to caption,
+                  url_options,
+                  :method => 'put',
+                  :remote => true,
+                  :class => css
   end
 
   def available_limits

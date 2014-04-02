@@ -13,7 +13,7 @@
             </th>
             <th>#</th>
             <% query.columns.each do |column| %>
-              <th><%= column.caption %></th>
+              <%= query.column_header(column) %>
             <% end %>
           </tr>
         </thead>

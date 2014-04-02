@@ -14,7 +14,7 @@
                         :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
           </th>
           <% query.inline_columns.each do |column| %>
-            <th><%= column.caption %></th>
+            <%= query.column_header(column) %>
           <% end %>
         </tr>
         </thead>
