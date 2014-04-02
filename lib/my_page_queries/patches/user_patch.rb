@@ -22,7 +22,9 @@ module MyPageQueries::Patches::UserPatch
   end
 
   def queries_from_my_projects
-    @queries_from_my_projects ||= other_visible_queries.find_all { |q| q.is_public && q.project && member_of?(q.project) }
+    @queries_from_my_projects ||= other_visible_queries.find_all do |q|
+      q.is_public? && q.project && member_of?(q.project)
+    end
   end
 
   def queries_from_public_projects
