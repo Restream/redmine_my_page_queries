@@ -13,6 +13,7 @@ env:
   - REDMINE_VER=2.3.3
   - REDMINE_VER=2.4.4
   - REDMINE_VER=2.5.0
+  - REDMINE_VER=2.5.1
 
 matrix:
   exclude:
