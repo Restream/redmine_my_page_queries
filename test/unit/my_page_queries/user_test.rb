@@ -44,8 +44,8 @@ class MyPageQueries::UserTest < ActionView::TestCase
 
   def test_my_page_custom_text
     test_string = 'test string'
-    @user.my_page_text = test_string
+    @user.update_my_page_text_block('text_1', test_string)
     @user.reload
-    assert_equal test_string, @user.my_page_text
+    assert_equal test_string, @user.my_page_text_block('text_1')
   end
 end

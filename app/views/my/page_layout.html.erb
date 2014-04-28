@@ -42,3 +42,7 @@
 <%= javascript_tag "initMyPageSortable('right', '#{ escape_javascript url_for(:action => "order_blocks", :group => "right") }');" %>
 
 <% html_title(l(:label_my_page)) -%>
+
+<%= javascript_tag do %>
+  var myPageTextModal = '<%= escape_javascript render('my/my_page_text_modal') %>';
+<% end %>

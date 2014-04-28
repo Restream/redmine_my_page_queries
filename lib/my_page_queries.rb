@@ -1,4 +1,5 @@
 module MyPageQueries
+  TEXT_BLOCK = 'text'
 end
 
 require 'my_page_queries/patches/user_patch'

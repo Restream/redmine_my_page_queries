@@ -30,4 +30,16 @@ class MyPageQueriesHelperTest < ActionView::TestCase
     block = 'issuesassignedtome'
     assert block_exists?(user, block)
   end
+
+  def test_text_block
+    assert text_block?('text_1')
+    assert text_block?('text_12')
+    refute text_block?('text_123n')
+  end
+
+  def test_block_exists_for_text_block
+    user = User.find(4)
+    block = 'text_1'
+    assert block_exists?(user, block)
+  end
 end

@@ -36,13 +36,14 @@ module MyPageQueries::Patches::UserPatch
     kl.visible(self)
   end
 
-  def my_page_text=(val)
-    pref[:my_page_text] = val
+  def update_my_page_text_block(block_name, val)
+    pref[:my_page_text_blocks] ||= {}
+    pref[:my_page_text_blocks][block_name] = val
     pref.save
   end
 
-  def my_page_text
-    pref[:my_page_text]
+  def my_page_text_block(block_name)
+    pref[:my_page_text_blocks] && pref[:my_page_text_blocks][block_name]
   end
 end
 

@@ -32,7 +32,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
   end
 
   def test_page_layout_with_text_block
-    @user.pref[:my_page_text_blocks] = { 'text_1' => 'some-text-1' }
+    @user.update_my_page_text_block('text_1', 'some-text-1')
     @user.pref[:my_page_layout] = { 'top' => ['text_1'] }
     @user.pref.save!
     get :page_layout
@@ -50,7 +50,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
   end
 
   def test_textblock_available_even_with_already_added_block
-    @user.pref[:my_page_text_blocks] = { 'text_1' => 'sometext1' }
+    @user.update_my_page_text_block('text_1', 'sometext1')
     @user.pref[:my_page_layout] = { 'top' => ['text_1'] }
     @user.pref.save!
     get :page_layout
@@ -84,6 +84,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
   def test_add_text_block
     post :add_block, :block => 'text'
     assert_redirected_to '/my/page_layout'
+    @user.pref.reload
     assert @user.pref[:my_page_layout]
     top_blocks = @user.pref[:my_page_layout]['top']
     text_blocks = @user.pref[:my_page_text_blocks]
@@ -94,24 +95,26 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
   end
 
   def test_add_second_text_block
-    @user.pref[:my_page_text_blocks] = { 'text_1' => 'some-text-1' }
+    @user.update_my_page_text_block('text_1', 'some-text-1')
     @user.pref[:my_page_layout] = { 'top' => ['text_1'] }
+    @user.pref.save!
     post :add_block, :block => 'text'
     assert_redirected_to '/my/page_layout'
+    @user.pref.reload
     assert @user.pref[:my_page_layout]
     top_blocks = @user.pref[:my_page_layout]['top']
-    text_blocks = @user.pref[:my_page_text_blocks]
     assert top_blocks
     assert top_blocks.include?('text_2')
-    assert text_blocks
-    assert text_blocks.keys.include?('text_2')
   end
 
   def test_add_first_text_block
-    @user.pref[:my_page_text_blocks] = { 'text_1' => 'some-text-1', 'text_2' => 'some-text-2' }
+    @user.update_my_page_text_block('text_1', 'some-text-1')
+    @user.update_my_page_text_block('text_2', 'some-text-2')
     @user.pref[:my_page_layout] = { 'top' => ['text_2'] }
+    @user.pref.save!
     post :add_block, :block => 'text'
     assert_redirected_to '/my/page_layout'
+    @user.pref.reload
     assert @user.pref[:my_page_layout]
     top_blocks = @user.pref[:my_page_layout]['top']
     assert top_blocks
@@ -128,12 +131,12 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
   end
 
   def test_show_text_block
-    @user.pref[:my_page_text_blocks] = { 'text_1' => 'some-show-text-1' }
+    @user.update_my_page_text_block('text_1', 'some-show-text-1')
     @user.pref[:my_page_layout] = { 'top' => ['text_1'] }
     @user.pref.save!
     get :page
     assert_response :success
-    assert_select :div, :content => /some-show-text-1/
+    assert_tag :div, :content => /some-show-text-1/
   end
 
   def test_add_query_block_to_default
@@ -149,6 +152,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
   def test_add_text_block_to_default
     @user.pref[:my_page_layout] = nil
     @user.pref[:my_page_text_blocks] = nil
+    @user.pref.save!
     post :add_block, :block => 'text'
     assert_redirected_to '/my/page_layout'
     @user = User.current
@@ -173,14 +177,14 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
   end
 
   def test_remove_text_block
-    @user.pref[:my_page_text_blocks] = { 'text_1' => 'some-show-text-1' }
+    @user.update_my_page_text_block('text_1', 'some-show-text-1')
     @user.pref[:my_page_layout] = { 'top' => ['text_1'] }
     @user.pref.save!
     post :remove_block, :block => 'text_1'
     assert_redirected_to '/my/page_layout'
     @user.pref.reload
     refute @user.pref[:my_page_layout].values.flatten.include?('text_1')
-    assert @user.pref[:my_page_text_blocks].keys.include?('text_1'), 'Text content should stay persisted'
+    assert_equal 'some-show-text-1', @user.my_page_text_block('text_1'), 'Text content should stay persisted'
   end
 
   def test_order_blocks

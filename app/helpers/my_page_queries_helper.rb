@@ -1,6 +1,8 @@
 module MyPageQueriesHelper
   def block_exists?(user, block)
-    MyController::BLOCKS.keys.include?(block) || query_from_block(user, block)
+    MyController::BLOCKS.keys.include?(block) ||
+        query_from_block(user, block) ||
+        text_block?(block)
   end
 
   def extract_query_id_from_block(block)
@@ -12,14 +14,23 @@ module MyPageQueriesHelper
     user.detect_query(query_id)
   end
 
-  def render_block(user, block)
-    if (query = query_from_block(user, block))
+  def text_block?(block)
+    block =~ /\Atext_(\d+)\z/
+  end
+
+  def render_block(user, block_name)
+    if (query = query_from_block(user, block_name))
       query_presenter = QueryPresenter.new(query, self)
       render query_block_partial_name,
              :user => user,
              :query => query_presenter
+    elsif text_block?(block_name)
+      render 'my/text_block',
+             :user => user,
+             :block_name => block_name,
+             :text => user.my_page_text_block(block_name)
     else
-      render "my/blocks/#{block}", :user => user
+      render "my/blocks/#{block_name}", :user => user
     end
   end
 
@@ -35,8 +46,9 @@ module MyPageQueriesHelper
   end
 
   def block_options_for_select(user = User.current)
+    my_page_blocks = @block_options + [[l(:field_text), MyPageQueries::TEXT_BLOCK]]
     content_tag('option') +
-        grouped_options_for_select(l(:label_my_page_block) => @block_options) +
+        grouped_options_for_select(l(:label_my_page_block) => my_page_blocks) +
         grouped_options_for_select(my_queries(user)) +
         grouped_options_for_select(queries_from_my_projects(user)) +
         grouped_options_for_select(queries_from_public_projects(user))

@@ -1,13 +1,13 @@
 <h3 class="title"><%= l(:label_string) %></h3>
 
-<%= form_tag(update_my_page_text_path,
+<%= form_tag('block_path',
              :remote => true,
              :method => :put,
              :id => 'my-page-text-form') do %>
 
   <div class="my-page-text">
     <%= text_area_tag 'my_page_text_area',
-                      @user.my_page_text,
+                      'text',
                       :rows => 10,
                       :accesskey => accesskey(:edit),
                       :class => 'wiki-edit',

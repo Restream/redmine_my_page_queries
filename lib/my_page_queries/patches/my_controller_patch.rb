@@ -11,7 +11,7 @@ module MyPageQueries::Patches::MyControllerPatch
 
     before_filter :my_page_sort_init
 
-    alias_method_chain :add_block, :queries
+    alias_method_chain :add_block, :query_and_text
 
     helper :sort
     include SortHelper
@@ -32,12 +32,16 @@ module MyPageQueries::Patches::MyControllerPatch
     redirect_to :action => 'page_layout'
   end
 
-  def add_block_with_queries
+  def add_block_with_query_and_text(user = User.current)
     if (block = detect_query_block_from_params)
-      add_block_to_top(User.current, block)
+      add_block_to_top(user, block)
+      redirect_to :action => 'page_layout'
+    elsif (block = detect_new_text_block_from_params)
+      user.update_my_page_text_block(block, l(:label_text)) if user.my_page_text_block(block).blank?
+      add_block_to_top(user, block)
       redirect_to :action => 'page_layout'
     else
-      add_block_without_queries
+      add_block_without_query_and_text
     end
   end
 
@@ -53,10 +57,18 @@ module MyPageQueries::Patches::MyControllerPatch
     end
   end
 
-  def update_text
+  def update_text_block
     @user = User.current
-    @user.my_page_text = params[:my_page_text_area]
-    render 'update_text', :layout => false, :content_type => 'text/javascript'
+    text = params[:my_page_text_area]
+    block_name = params[:block_name]
+    @user.update_my_page_text_block(block_name, text)
+    render 'update_text',
+           :layout => false,
+           :content_type => 'text/javascript',
+           :locals => {
+               :block_name => block_name,
+               :text => text
+           }
   end
 
   private
@@ -86,6 +98,18 @@ module MyPageQueries::Patches::MyControllerPatch
   def detect_query_block_from_params
     block = params[:block].to_s.underscore
     block if extract_query_id_from_block(block)
+  end
+
+  def detect_new_text_block_from_params(user = User.current)
+    block = params[:block].to_s.underscore
+    return nil unless block == MyPageQueries::TEXT_BLOCK
+    layout = user.pref[:my_page_layout] || {}
+    block_id = 1
+    while true
+      block = "#{MyPageQueries::TEXT_BLOCK}_#{block_id}"
+      return block unless %w(top left right).detect { |f| (layout[f] ||= []).include?(block) }
+      block_id += 1
+    end
   end
 
   def update_user_query_pref_from_param(user)
