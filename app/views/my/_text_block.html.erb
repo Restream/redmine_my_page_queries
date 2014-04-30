@@ -1,9 +1,3 @@
-<% if action_name == 'page_layout' %>
-  <h3>
-    <div class="my-page-text-edit-button">
-      <%= link_to l(:button_edit), '#', :class => 'edit-my-page-text',
-                  :data => { :text => text, :url => update_text_block_path(block_name) } %>
-    </div>
-  </h3>
-<% end %>
-<div id="my_page_<%= block_name %>"><%= render 'my/text', :text => text %></div>
+<div id="my_page_<%= block_name %>">
+  <%= render 'my/text', :text => text, :block_name => block_name %>
+</div>

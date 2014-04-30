@@ -1,1 +1,1 @@
-$("#my_page_<%= block_name %>").html('<%= escape_javascript render('my/text', :text => text) %>');
+$("#my_page_<%= block_name %>").html('<%= escape_javascript render('my/text', :text => text, :block_name => block_name) %>');
