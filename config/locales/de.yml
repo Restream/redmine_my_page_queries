@@ -3,3 +3,5 @@ de:
   my_page_query_limit: "Nur %{limits} anzeigen"
   my_page_query_compact: "Kompaktansicht"
   my_page_query_full: "Erweiterte Ansicht"
+  label_queries_from_my_projects: "Filter von meinen Projekten"
+  label_queries_from_public_projects: "Filter von öffentlichen Projekten"
