@@ -23,6 +23,13 @@ class QueryPresenterTest < ActionView::TestCase
     assert_equal title, @query_presenter.title
   end
 
+  def test_title_with_project
+    project_query = Query.find(7)
+    project_query_presenter = QueryPresenter.new(project_query, view)
+    title = "#{project_query.project.name} - #{project_query.name} (#{project_query.issue_count})"
+    assert_equal title, project_query_presenter.title
+  end
+
   def test_link
     assert_equal '<a href="/issues?query_id=5">title</a>',
                  @query_presenter.link('title')
