@@ -1,0 +1,7 @@
+fr:
+  button_default_layout: "Restaurer la vue par défaut"
+  my_page_query_limit: "Afficher seulement %{limits} demandes"
+  my_page_query_compact: "Vue compacte"
+  my_page_query_full: "Vue étendue"
+  label_queries_from_my_projects: "Rapports depuis mes projets"
+  label_queries_from_public_projects: "Rapports depuis les projets publics"
