@@ -10,7 +10,11 @@ class QueryPresenter < SimpleDelegator
   end
 
   def title
-    "#{name} (#{issue_count})"
+    if project.nil?
+      "#{name} (#{issue_count})"
+    else
+      "#{project.name} - #{name} (#{issue_count})"
+    end
   end
 
   def link(title)
