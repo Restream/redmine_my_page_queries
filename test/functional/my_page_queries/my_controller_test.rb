@@ -28,7 +28,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
     @user.pref.save!
     get :page_layout
     assert_response :success
-    assert_tag :h3, :content => /#{query.name}/
+    assert_select 'h3', :html => /#{query.name}/
   end
 
   def test_page_layout_with_text_block
@@ -37,7 +37,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
     @user.pref.save!
     get :page_layout
     assert_response :success
-    assert_tag :div, :content => /some-text-1/
+    assert_select 'div', :html => /some-text-1/
   end
 
   def test_page_layout_with_already_added_query
@@ -46,7 +46,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
     @user.pref.save!
     get :page_layout
     assert_response :success
-    assert_no_tag :option, :content => /#{query.name}/
+    assert_select 'option', { :html => /#{query.name}/, :count => 0 }
   end
 
   def test_textblock_available_even_with_already_added_block
@@ -55,7 +55,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
     @user.pref.save!
     get :page_layout
     assert_response :success
-    assert_tag :option, :attributes => { :value => 'text' }
+    assert_select 'option[value="text"]', true
   end
 
   def test_page_layout_with_missing_query
@@ -127,7 +127,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
     @user.pref.save!
     get :page
     assert_response :success
-    assert_tag :h3, :content => /#{query.name}/
+    assert_select 'h3', :html => /#{query.name}/
   end
 
   def test_show_text_block
@@ -136,7 +136,7 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
     @user.pref.save!
     get :page
     assert_response :success
-    assert_tag :div, :content => /some-show-text-1/
+    assert_select 'div', :html => /some-show-text-1/
   end
 
   def test_add_query_block_to_default
@@ -196,15 +196,15 @@ class MyPageQueries::MyControllerTest < ActionController::TestCase
   def test_layout_contains_users_queries
     get :page_layout
     assert_response :success
-    assert_tag :option, :attributes => { :value => 'query_4'}
+    assert_select 'option[value="query_4"]', true
   end
 
   def test_layout_contains_other_queries
     get :page_layout
     assert_response :success
-    assert_tag :option, :attributes => { :value => 'query_5'}
-    assert_tag :option, :attributes => { :value => 'query_6'}
-    assert_tag :option, :attributes => { :value => 'query_9'}
+    assert_select 'option[value="query_5"]', true
+    assert_select 'option[value="query_6"]', true
+    assert_select 'option[value="query_9"]', true
   end
 
   def test_update_query_limit
