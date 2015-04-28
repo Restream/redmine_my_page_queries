@@ -32,7 +32,12 @@ This plugin version is compatible only with Redmine 2.x.
       
             git clone https://github.com/Undev/redmine_my_page_queries.git plugins/redmine_my_page_queries           
       
-2. Restart Redmine.
+2. Update the Gemfile.lock file by running the following commands:  
+
+         rm Gemfile.lock  
+         bundle install 
+
+3. Restart Redmine.
 
 Now you should be able to see the plugin in **Administration > Plugins**.
 
@@ -55,3 +60,7 @@ You can switch between a compact and extended view by clicking the corresponding
 ![compact and extended view](my_page_queries_2.png)
 
 To reset the layout of the **My page** screen, click **Restore default**.
+
+## Maintainers
+
+Danil Tashkinov, [github.com/nodecarter](https://github.com/nodecarter)
