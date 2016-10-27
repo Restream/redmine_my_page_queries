@@ -1,7 +1,7 @@
 # Redmine My Page Queries
 
-[![Build Status](https://travis-ci.org/Restream/redmine_my_page_queries.png)](https://travis-ci.org/Undev/redmine_my_page_queries)
-[![Code Climate](https://codeclimate.com/github/Restream/redmine_my_page_queries.png)](https://codeclimate.com/github/Undev/redmine_my_page_queries)
+[![Build Status](https://travis-ci.org/Restream/redmine_my_page_queries.png)](https://travis-ci.org/Restream/redmine_my_page_queries)
+[![Code Climate](https://codeclimate.com/github/Restream/redmine_my_page_queries.png)](https://codeclimate.com/github/Restream/redmine_my_page_queries)
 
 This plugin enhances **My page** screen in Redmine with the following blocks:
 
@@ -30,7 +30,7 @@ This plugin version is compatible only with Redmine 2.x.
             
       Copy the plugin from GitHub using the following commands:
       
-            git clone https://github.com/Undev/redmine_my_page_queries.git plugins/redmine_my_page_queries           
+            git clone https://github.com/Restream/redmine_my_page_queries.git plugins/redmine_my_page_queries           
       
 2. Update the Gemfile.lock file by running the following commands:  
 
