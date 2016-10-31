@@ -1,13 +1,14 @@
 require_dependency 'query'
-require_dependency 'issue_query' if Redmine::VERSION.to_s >= '2.3.0'
+require_dependency 'issue_query'
 
 module MyPageQueries::Patches::MyControllerPatch
   extend ActiveSupport::Concern
 
   included do
 
-    before_filter :apply_default_layout, :only => [:add_block, :remove_block],
-                  :if => proc { User.current.pref[:my_page_layout].nil? }
+    before_filter :apply_default_layout,
+                  only: [:add_block, :remove_block],
+                  if:   proc { User.current.pref[:my_page_layout].nil? }
 
     before_filter :my_page_sort_init
 
@@ -25,21 +26,21 @@ module MyPageQueries::Patches::MyControllerPatch
   end
 
   def default_layout
-    @user = User.current
+    @user                       = User.current
     # remove block in all groups
     @user.pref[:my_page_layout] = nil
     @user.pref.save
-    redirect_to :action => 'page_layout'
+    redirect_to action: 'page_layout'
   end
 
   def add_block_with_query_and_text(user = User.current)
     if (block = detect_query_block_from_params)
       add_block_to_top(user, block)
-      redirect_to :action => 'page_layout'
+      redirect_to action: 'page_layout'
     elsif (block = detect_new_text_block_from_params)
       user.update_my_page_text_block(block, l(:label_text)) if user.my_page_text_block(block).blank?
       add_block_to_top(user, block)
-      redirect_to :action => 'page_layout'
+      redirect_to action: 'page_layout'
     else
       add_block_without_query_and_text
     end
@@ -51,30 +52,30 @@ module MyPageQueries::Patches::MyControllerPatch
     if query
       @block_name = "query_#{query.id}"
       update_user_query_pref_from_param(@user)
-      render 'query_block', :layout => false
+      render 'query_block', layout: false
     else
       render_404
     end
   end
 
   def update_text_block
-    @user = User.current
-    text = params[:my_page_text_area]
+    @user      = User.current
+    text       = params[:my_page_text_area]
     block_name = params[:block_name]
     @user.update_my_page_text_block(block_name, text)
     render 'update_text',
-           :layout => false,
-           :content_type => 'text/javascript',
-           :locals => {
-               :block_name => block_name,
-               :text => text
+           layout:       false,
+           content_type: 'text/javascript',
+           locals:       {
+             block_name: block_name,
+             text:       text
            }
   end
 
   private
 
   def apply_default_layout
-    user = User.current
+    user                       = User.current
     # make a deep copy of default layout
     user.pref[:my_page_layout] = Marshal.load(Marshal.dump(MyController::DEFAULT_LAYOUT))
     user.save
@@ -88,7 +89,7 @@ module MyPageQueries::Patches::MyControllerPatch
   def add_block_to_top(user, block)
     layout = user.pref[:my_page_layout] || {}
     # remove if already present in a group
-    %w(top left right).each {|f| (layout[f] ||= []).delete block }
+    %w(top left right).each { |f| (layout[f] ||= []).delete block }
     # add it on top
     layout['top'].unshift block
     user.pref[:my_page_layout] = layout
@@ -103,7 +104,7 @@ module MyPageQueries::Patches::MyControllerPatch
   def detect_new_text_block_from_params(user = User.current)
     block = params[:block].to_s.underscore
     return nil unless block == MyPageQueries::TEXT_BLOCK
-    layout = user.pref[:my_page_layout] || {}
+    layout   = user.pref[:my_page_layout] || {}
     block_id = 1
     while true
       block = "#{MyPageQueries::TEXT_BLOCK}_#{block_id}"
@@ -115,7 +116,7 @@ module MyPageQueries::Patches::MyControllerPatch
   def update_user_query_pref_from_param(user)
     return unless params[:query]
     query_key = "query_#{params[:query_id]}".to_sym
-    opts = user.pref[query_key] || {}
+    opts      = user.pref[query_key] || {}
     opts.merge! params[:query].symbolize_keys
     user.pref[query_key] = opts
     user.pref.save!

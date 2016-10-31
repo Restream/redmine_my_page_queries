@@ -42,8 +42,8 @@ class MyPageQueries::UpgradeService
 
   def replace_old_query_settings(settings)
     settings.each do |_, options|
-      new_query_key = "query_#{options[:id]}".to_sym
-      user.pref.others[new_query_key] ||= {}
+      new_query_key                           = "query_#{options[:id]}".to_sym
+      user.pref.others[new_query_key]         ||= {}
       user.pref.others[new_query_key][:limit] = options[:limit]
     end
   end

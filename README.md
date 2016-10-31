@@ -14,7 +14,7 @@ The initial author is [ALVILA](https://github.com/alvila/redmine_my_page_queries
 
 ## Compatibility
 
-This plugin version is compatible only with Redmine 2.x.
+This plugin version is compatible with Redmine 3.x.
 
 ## Installation
 
@@ -50,14 +50,14 @@ If you are upgrading Redmine from previous versions (prior to 2.0.0) and you wan
 This plugin enhances the **My page** screen with several useful blocks related to user's custom queries. 
 
 To add a block that displays all your queries, click **Personalize this page**, select **My custom queries** in the drop-down list and then click **Add**.  
-![custom queries](my_page_queries_1.png)
+![custom queries](doc/my_page_queries_1.png)
 
 To add a block with issues that match a particular query, select this query name in the **My custom queries** section of the drop-down list, and click **Add**.
 
 The **Queries from my projects** section in the drop-down list contains all public filters created by other users based on your projects. The **Queries from public projects** section shows other public filters from public projects.
 
 You can switch between a compact and extended view by clicking the corresponding links.  
-![compact and extended view](my_page_queries_2.png)
+![compact and extended view](doc/my_page_queries_2.png)
 
 To reset the layout of the **My page** screen, click **Restore default**.
 

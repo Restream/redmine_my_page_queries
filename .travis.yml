@@ -4,23 +4,12 @@ services:
   - mysql
 
 rvm:
-  - 1.9.3
-  - 2.0.0
+  - 2.3.1
 
 env:
-  - REDMINE_VER=2.1.6
-  - REDMINE_VER=2.2.4
-  - REDMINE_VER=2.3.3
-  - REDMINE_VER=2.4.4
-  - REDMINE_VER=2.5.0
-  - REDMINE_VER=2.5.1
-
-matrix:
-  exclude:
-    - rvm: 2.0.0
-      env: REDMINE_VER=2.1.6
-    - rvm: 2.0.0
-      env: REDMINE_VER=2.2.4
+  - REDMINE_VER=3.1.7
+  - REDMINE_VER=3.2.4
+  - REDMINE_VER=3.3.1
 
 before_install:
   - export PLUGIN_NAME=redmine_my_page_queries
@@ -32,9 +21,10 @@ before_install:
   - cd $REDMINE_PATH
 
 before_script:
-  - bundle exec rake db:create
-  - bundle exec rake db:migrate
-  - bundle exec rake redmine:plugins:migrate
+  - export RAILS_ENV=test
+  - bundle exec rake db:create db:migrate
 
 script:
+  - export RAILS_ENV=test
+  - export RUBYOPT="-W0"
   - bundle exec rake redmine:plugins:test NAME=$PLUGIN_NAME

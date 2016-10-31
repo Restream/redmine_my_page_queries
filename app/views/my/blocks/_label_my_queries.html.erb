@@ -1,8 +1,8 @@
 <h3><%= l(:label_my_queries) %></h3>
 
 <%
-   queries_by_project = @user.my_visible_queries.group_by(&:project)
-   global_queries = queries_by_project.delete(nil) || []
+  queries_by_project = @user.my_visible_queries.group_by(&:project)
+  global_queries = queries_by_project.delete(nil) || []
 %>
 
 <% if global_queries.any? %>

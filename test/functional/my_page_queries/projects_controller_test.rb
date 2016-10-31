@@ -8,27 +8,27 @@ class MyPageQueries::ProjectsControllerTest < ActionController::TestCase
            :attachments, :custom_fields, :custom_values, :time_entries
 
   def setup
-    @controller = ProjectsController.new
-    @request    = ActionController::TestRequest.new
-    @response   = ActionController::TestResponse.new
+    @controller                = ProjectsController.new
+    @request                   = ActionController::TestRequest.new
+    @response                  = ActionController::TestResponse.new
     @request.session[:user_id] = nil
-    Setting.default_language = 'en'
+    Setting.default_language   = 'en'
   end
 
   def test_create_project
     @request.session[:user_id] = 1
     post :create,
-         :project => {
-             :name => "blog",
-             :description => "weblog",
-             :homepage => 'http://weblog',
-             :identifier => "blog",
-             :is_public => 1,
-             :custom_field_values => { '3' => 'Beta' },
-             :tracker_ids => ['1', '3'],
-             # an issue custom field that is not for all project
-             :issue_custom_field_ids => ['9'],
-             :enabled_module_names => ['issue_tracking', 'news', 'repository']
+         project: {
+           name:                   'blog',
+           description:            'weblog',
+           homepage:               'http://weblog',
+           identifier:             'blog',
+           is_public:              1,
+           custom_field_values:    { '3' => 'Beta' },
+           tracker_ids:            ['1', '3'],
+           # an issue custom field that is not for all project
+           issue_custom_field_ids: ['9'],
+           enabled_module_names:   ['issue_tracking', 'news', 'repository']
          }
     assert_redirected_to '/projects/blog/settings'
 

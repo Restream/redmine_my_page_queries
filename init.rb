@@ -7,10 +7,8 @@ end
 Redmine::Plugin.register :redmine_my_page_queries do
   name 'MyPage custom queries'
   description 'Adds custom queries onto My Page screen'
-  version '2.1.6'
-  author 'Undev'
-  author_url 'https://github.com/Undev'
-  url 'https://github.com/Undev/redmine_my_page_queries'
-
-  requires_redmine '2.1.0'
+  version '2.1.7'
+  author 'Restream'
+  author_url 'https://github.com/Restream'
+  url 'https://github.com/Restream/redmine_my_page_queries'
 end

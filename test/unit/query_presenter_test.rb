@@ -8,9 +8,9 @@ class QueryPresenterTest < ActionView::TestCase
   include ActionView::TestCase::Behavior
 
   def setup
-    @user = User.find(2)
-    User.current = @user
-    @query = Query.find(5)
+    @user            = User.find(2)
+    User.current     = @user
+    @query           = Query.find(5)
     @query_presenter = QueryPresenter.new(@query, view)
   end
 
@@ -24,9 +24,9 @@ class QueryPresenterTest < ActionView::TestCase
   end
 
   def test_title_with_project
-    project_query = Query.find(7)
+    project_query           = Query.find(7)
     project_query_presenter = QueryPresenter.new(project_query, view)
-    title = "#{project_query.project.name} - #{project_query.name} (#{project_query.issue_count})"
+    title                   = "#{project_query.project.name} - #{project_query.name} (#{project_query.issue_count})"
     assert_equal title, project_query_presenter.title
   end
 
@@ -44,7 +44,7 @@ class QueryPresenterTest < ActionView::TestCase
   end
 
   def test_limit
-    @user.pref[:query_5] = { :limit => 20 }
+    @user.pref[:query_5] = { limit: 20 }
     @user.pref.save!
     @user.pref.reload
     assert_equal 20, @query_presenter.limit
